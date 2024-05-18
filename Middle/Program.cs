@@ -1,5 +1,8 @@
 
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Middle.Middlewares;
 using System.Threading.RateLimiting;
 
@@ -18,9 +21,9 @@ namespace Middle
             {
                 options.AddFixedWindowLimiter("fixed", configure =>
                 {
-                    configure.Window = TimeSpan.FromSeconds(3);// kaç saniyede istek aatcak
-                    configure.PermitLimit = 1; // kaç istek kabul edecek
-                    configure.QueueLimit = 1;// istek dýsýnda kalanlarýn kaçý kuyruga eklenecek
+                    configure.Window = TimeSpan.FromSeconds(1);// kaç saniyede istek aatcak
+                    configure.PermitLimit = 100; // kaç istek kabul edecek
+                    configure.QueueLimit = 100;// istek dýsýnda kalanlarýn kaçý kuyruga eklenecek
                     configure.QueueProcessingOrder = QueueProcessingOrder.OldestFirst; // iþlenme sýrasý fifo mantýgý
                 });
             });
@@ -34,7 +37,7 @@ namespace Middle
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddHealthChecks().AddCheck("healthcheck",()=>HealthCheckResult.Healthy());
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -46,6 +49,7 @@ namespace Middle
 
             app.UseHttpsRedirection();
             app.UseCors();
+            app.UseHealthChecks("healthcheck");
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();

@@ -49,7 +49,7 @@ namespace Middle
 
             app.UseHttpsRedirection();
             app.UseCors();
-            app.UseHealthChecks("healthcheck");
+            app.UseHealthChecks("/healthcheck");
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();

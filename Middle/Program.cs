@@ -1,4 +1,5 @@
 
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -49,6 +50,15 @@ namespace Middle
 
             app.UseHttpsRedirection();
             app.UseCors();
+            app.MapHealthChecks("healthcheck", new HealthCheckOptions
+            {
+                ResponseWriter=UIResponseWriter.WriteHealthCheckUIResponse,
+                ResultStatusCodes =
+                {
+                    [HealthStatus.Healthy]=StatusCodes.Status200OK,
+                    [HealthStatus.Unhealthy]=StatusCodes.Status503ServiceUnavailable,
+                }
+            });
             app.UseHealthChecks("/healthcheck");
             app.UseAuthorization();
 

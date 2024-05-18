@@ -11,7 +11,7 @@ namespace Middle.Controllers
         {
             try
             {
-                throw new Exception("we can not find your user");
+                throw new WeCannotFindYourUserException();
             }
             catch(Exception ex) 
             {

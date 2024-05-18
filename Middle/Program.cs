@@ -1,4 +1,6 @@
 
+using Middle.Middlewares;
+
 namespace Middle
 {
     public class Program
@@ -8,7 +10,7 @@ namespace Middle
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddScoped<ExceptionMiddleware>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -27,7 +29,7 @@ namespace Middle
 
             app.UseAuthorization();
 
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.MapControllers();
 
             app.Run();

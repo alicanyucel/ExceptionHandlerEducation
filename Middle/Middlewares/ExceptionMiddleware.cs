@@ -1,4 +1,8 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Net.Mime;
+using System.Text.Json;
+
 namespace Middle.Middlewares
 {
     public class ExceptionMiddleware : IMiddleware
@@ -11,8 +15,11 @@ namespace Middle.Middlewares
 			}
 			catch (Exception ex)
 			{
-
-				throw;
+				context.Response.StatusCode = 500;
+				context.Response.ContentType = MediaTypeNames.Application.Json;
+				var obj=new {Message=ex.Message};
+				string text=JsonSerializer.Serialize(obj);	
+				await context.Response.WriteAsync(text);
 			}
         }
     }

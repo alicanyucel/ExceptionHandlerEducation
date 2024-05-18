@@ -7,7 +7,7 @@ namespace Middle.Controllers
     public class ValuesController : ControllerBase
     {
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetException()
         {
             try
             {
@@ -20,12 +20,10 @@ namespace Middle.Controllers
 
             }
         }
-    }
-}
-public class WeCannotFindYourUserException : Exception
-{
-    public WeCannotFindYourUserException():base("we cannot find your user") 
-    {
-        
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(new { Message = "api is working" });
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Middle.Controllers
 {
@@ -21,6 +22,7 @@ namespace Middle.Controllers
             }
         }
         [HttpGet]
+        [EnableRateLimiting("fixed")]
         public IActionResult Get()
         {
             return Ok(new { Message = "api is working" });

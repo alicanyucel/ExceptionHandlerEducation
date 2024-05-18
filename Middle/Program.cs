@@ -1,5 +1,7 @@
 
+using Microsoft.AspNetCore.RateLimiting;
 using Middle.Middlewares;
+using System.Threading.RateLimiting;
 
 namespace Middle
 {
@@ -12,6 +14,16 @@ namespace Middle
             // Add services to the container.
             builder.Services.AddScoped<ExceptionMiddleware>();
             builder.Services.AddControllers();
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.AddFixedWindowLimiter("fixed", configure =>
+                {
+                    configure.Window = TimeSpan.FromSeconds(3);// kaç saniyede istek aatcak
+                    configure.PermitLimit = 1; // kaç istek kabul edecek
+                    configure.QueueLimit = 1;// istek dýsýnda kalanlarýn kaçý kuyruga eklenecek
+                    configure.QueueProcessingOrder = QueueProcessingOrder.OldestFirst; // iþlenme sýrasý fifo mantýgý
+                });
+            });
             builder.Services.AddCors(opt =>
             {
                 opt.AddDefaultPolicy(builder =>
@@ -38,7 +50,7 @@ namespace Middle
 
             app.UseMiddleware<ExceptionMiddleware>();
             app.MapControllers();
-
+            app.UseRateLimiter();
             app.Run();
         }
     }

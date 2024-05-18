@@ -49,7 +49,7 @@ namespace Middle
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.MapControllers();
+            app.MapControllers().RequireRateLimiting("fixed"); // butun kontrolllerda rate limit yapar
             app.UseRateLimiter();
             app.Run();
         }

@@ -22,7 +22,7 @@ namespace Middle.Controllers
             }
         }
         [HttpGet]
-        [EnableRateLimiting("fixed")]
+       // [EnableRateLimiting("fixed")]
         public IActionResult Get()
         {
             return Ok(new { Message = "api is working" });

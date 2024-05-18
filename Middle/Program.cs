@@ -12,7 +12,13 @@ namespace Middle
             // Add services to the container.
             builder.Services.AddScoped<ExceptionMiddleware>();
             builder.Services.AddControllers();
-            builder.Services.AddCors();
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -27,7 +33,7 @@ namespace Middle
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(x=>x.AllowAnyOrigin());
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();
